@@ -33,6 +33,19 @@
 #include "utils/log.h"
 #include "utils/properties.h"
 
+/* Avoid using alpha bits for the framebuffer */
+bool should_avoid_using_alpha_bits_for_framebuffer() {
+  static bool first_run = true;
+  static bool ret = false;
+  if (first_run) {
+    first_run = false;
+    char proptext[PROPERTY_VALUE_MAX];
+    property_get("vendor.hwc.drm.avoid_using_alpha_bits_for_framebuffer", proptext, "0");
+    ret = strncmp(proptext, "1", 1) == 0;
+  }
+  return ret;
+}
+
 namespace android {
 
 BufferInfoGetter *BufferInfoGetter::GetInstance() {
@@ -89,10 +102,12 @@ uint32_t LegacyBufferInfoGetter::ConvertHalFormatToDrm(uint32_t hal_format) {
       return DRM_FORMAT_BGR888;
     case HAL_PIXEL_FORMAT_BGRA_8888:
       return DRM_FORMAT_ARGB8888;
+    case HAL_PIXEL_FORMAT_RGBA_8888:
+      if (!should_avoid_using_alpha_bits_for_framebuffer())
+        return DRM_FORMAT_ABGR8888;
+      [[fallthrough]];
     case HAL_PIXEL_FORMAT_RGBX_8888:
       return DRM_FORMAT_XBGR8888;
-    case HAL_PIXEL_FORMAT_RGBA_8888:
-      return DRM_FORMAT_ABGR8888;
     case HAL_PIXEL_FORMAT_RGB_565:
       return DRM_FORMAT_BGR565;
     case HAL_PIXEL_FORMAT_YV12:

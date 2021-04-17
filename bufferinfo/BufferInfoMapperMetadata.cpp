@@ -29,6 +29,8 @@
 
 #include "utils/log.h"
 
+extern bool should_avoid_using_alpha_bits_for_framebuffer();
+
 namespace android {
 
 BufferInfoGetter *BufferInfoMapperMetadata::CreateInstance() {
@@ -99,6 +101,10 @@ auto BufferInfoMapperMetadata::GetBoInfo(buffer_handle_t handle)
     ALOGE("Failed to get FourCC format err=%d", err);
     return {};
   }
+
+  if (should_avoid_using_alpha_bits_for_framebuffer()
+      && bi.format == DRM_FORMAT_ABGR8888)
+    bi.format = DRM_FORMAT_XBGR8888;
 
   err = mapper.getPixelFormatModifier(handle, &bi.modifiers[0]);
   if (err != 0) {
