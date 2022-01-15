@@ -91,7 +91,8 @@ auto BufferInfoMinigbm::GetBoInfo(buffer_handle_t handle)
   bi.width = width;
   bi.height = height;
 
-  bi.format = info.drm_fourcc;
+/* avoid using alpha bits for the framebuffer to support older GPUs */
+  bi.format = info.drm_fourcc == DRM_FORMAT_ABGR8888 ? DRM_FORMAT_XBGR8888 : info.drm_fourcc;
 
   for (int i = 0; i < info.num_fds; i++) {
     bi.modifiers[i] = info.modifier;
