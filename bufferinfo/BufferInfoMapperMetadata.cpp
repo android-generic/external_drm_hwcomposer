@@ -100,8 +100,8 @@ auto BufferInfoMapperMetadata::GetBoInfo(buffer_handle_t handle)
     return {};
   }
 
-  if (bo->format == DRM_FORMAT_ABGR8888)
-    bo->format = DRM_FORMAT_XBGR8888;
+  if (bi.format == DRM_FORMAT_ABGR8888)
+    bi.format = DRM_FORMAT_XBGR8888;
 
   err = mapper.getPixelFormatModifier(handle, &bi.modifiers[0]);
   if (err != 0) {
