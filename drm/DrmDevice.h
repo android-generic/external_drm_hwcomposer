@@ -126,6 +126,7 @@ class DrmDevice {
 public:
   bool preferred_mode_limit_;
   bool planes_enabling_;
+  int32_t planes_num_;
 };
 }  // namespace android
 
