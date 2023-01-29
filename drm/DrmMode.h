@@ -16,9 +16,10 @@
 
 #ifndef ANDROID_DRM_MODE_H_
 #define ANDROID_DRM_MODE_H_
-#include <cstdint>
+
 #include <xf86drmMode.h>
 
+#include <cstdint>
 #include <cstdio>
 #include <string>
 
