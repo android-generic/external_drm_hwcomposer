@@ -64,7 +64,7 @@ static bool GetConnectorProperty(const DrmDevice &dev,
 auto DrmConnector::CreateInstance(DrmDevice &dev, uint32_t connector_id,
                                   uint32_t index)
     -> std::unique_ptr<DrmConnector> {
-  auto conn = MakeDrmModeConnectorUnique(dev.GetFd(), connector_id);
+  auto conn = MakeDrmModeConnectorUnique(*dev.GetFd(), connector_id);
   if (!conn) {
     ALOGE("Failed to get connector %d", connector_id);
     return {};
@@ -100,18 +100,17 @@ int DrmConnector::UpdateEdidProperty() {
 }
 
 auto DrmConnector::GetEdidBlob() -> DrmModePropertyBlobUnique {
-  uint64_t blob_id = 0;
-  int ret = UpdateEdidProperty();
+  auto ret = UpdateEdidProperty();
   if (ret != 0) {
     return {};
   }
 
-  std::tie(ret, blob_id) = GetEdidProperty().value();
-  if (ret != 0) {
+  auto blob_id = GetEdidProperty().GetValue();
+  if (!blob_id) {
     return {};
   }
 
-  return MakeDrmModePropertyBlobUnique(drm_->GetFd(), blob_id);
+  return MakeDrmModePropertyBlobUnique(*drm_->GetFd(), *blob_id);
 }
 
 bool DrmConnector::IsInternal() const {
@@ -173,7 +172,7 @@ int DrmConnector::UpdateModes() {
     ALOGI_IF(xres && yres, "force mode to %dx%d@%dHz", xres, yres, rate);
   }
 
-  auto conn = MakeDrmModeConnectorUnique(drm_->GetFd(), GetId());
+  auto conn = MakeDrmModeConnectorUnique(*drm_->GetFd(), GetId());
   if (!conn) {
     ALOGE("Failed to get connector %d", GetId());
     return -ENODEV;
@@ -193,20 +192,16 @@ int DrmConnector::UpdateModes() {
     if (!exists) {
       DrmMode m(&connector_->modes[i]);
       if (xres && yres) {
-        if (m.h_display() != xres || m.v_display() != yres ||
-              (rate && uint32_t(m.v_refresh()) != rate))
+        if (m.GetRawMode().hdisplay != xres || m.GetRawMode().vdisplay != yres ||
+              (rate && uint32_t(m.GetVRefresh()) != rate))
           continue;
       }
-      modes_.emplace_back(DrmMode(&connector_->modes[i]));
-      ALOGD("add new mode %dx%d@%.1f for connector %d", m.h_display(), m.v_display(), m.v_refresh(), GetId());
+      modes_.emplace_back(&connector_->modes[i]);
+      ALOGD("add new mode %dx%d@%.1f for connector %d", m.GetRawMode().hdisplay, m.GetRawMode().vdisplay, m.GetVRefresh(), GetId());
     }
   }
 
   return 0;
-}
-
-void DrmConnector::SetActiveMode(DrmMode &mode) {
-  active_mode_ = mode;
 }
 
 }  // namespace android
