@@ -16,11 +16,11 @@
 // libdrmhwc_utils.a
 // =====================
 cc_library_static {
-    name: "libdrmhwc_utils",
+    name: "libdrmhwc_utils_celadon",
 
     srcs: ["utils/Worker.cpp"],
 
-    include_dirs: ["external/drm_hwcomposer"],
+    include_dirs: ["external/drm_hwcomposer_celadon"],
 
     cflags: [
         "-Wall",
@@ -32,10 +32,10 @@ cc_library_static {
 }
 
 // =====================
-// hwcomposer.drm.so
+// hwcomposer.drm_celadon.so
 // =====================
 cc_defaults {
-    name: "hwcomposer.drm_defaults",
+    name: "hwcomposer.drm_defaults_celadon",
 
     shared_libs: [
         "libcutils",
@@ -48,9 +48,9 @@ cc_defaults {
         "libutils",
     ],
 
-    include_dirs: ["external/drm_hwcomposer"],
+    include_dirs: ["external/drm_hwcomposer_celadon"],
 
-    static_libs: ["libdrmhwc_utils"],
+    static_libs: ["libdrmhwc_utils_celadon"],
 
     cflags: [
         "-Wall",
@@ -74,7 +74,7 @@ cc_defaults {
 }
 
 filegroup {
-    name: "drm_hwcomposer_common",
+    name: "drm_hwcomposer_common_celadon",
     srcs: [
         "bufferinfo/BufferInfoGetter.cpp",
         "bufferinfo/BufferInfoMapperMetadata.cpp",
@@ -109,50 +109,26 @@ filegroup {
 
 // Kept only for compatibility with older Android version. Please do not use!
 cc_library_static {
-    name: "drm_hwcomposer",
-    defaults: ["hwcomposer.drm_defaults"],
-    srcs: [":drm_hwcomposer_common"],
+    name: "drm_hwcomposer_celadon",
+    defaults: ["hwcomposer.drm_defaults_celadon"],
+    srcs: [":drm_hwcomposer_common_celadon"],
 }
 
 cc_library_shared {
-    name: "hwcomposer.drm",
-    defaults: ["hwcomposer.drm_defaults"],
+    name: "hwcomposer.drm_celadon",
+    defaults: ["hwcomposer.drm_defaults_celadon"],
     srcs: [
-        ":drm_hwcomposer_common",
+        ":drm_hwcomposer_common_celadon",
         "bufferinfo/legacy/BufferInfoLibdrm.cpp",
     ],
     cflags: ["-DUSE_IMAPPER4_METADATA_API"],
 }
 
 cc_library_shared {
-    name: "hwcomposer.drm_minigbm",
-    defaults: ["hwcomposer.drm_defaults"],
+    name: "hwcomposer.drm_minigbm_celadon",
+    defaults: ["hwcomposer.drm_defaults_celadon"],
     srcs: [
-        ":drm_hwcomposer_common",
+        ":drm_hwcomposer_common_celadon",
         "bufferinfo/legacy/BufferInfoMinigbm.cpp",
     ],
-}
-
-// Used by hwcomposer.drm_imagination
-filegroup {
-    name: "drm_hwcomposer_platformimagination",
-    srcs: ["bufferinfo/legacy/BufferInfoImagination.cpp"],
-}
-
-// Used by hwcomposer.drm_hikey and hwcomposer.drm_hikey960
-filegroup {
-    name: "drm_hwcomposer_platformhisi",
-    srcs: ["bufferinfo/legacy/BufferInfoMaliHisi.cpp"],
-}
-
-// Used by hwcomposer.drm_meson
-filegroup {
-    name: "drm_hwcomposer_platformmeson",
-    srcs: ["bufferinfo/legacy/BufferInfoMaliMeson.cpp"],
-}
-
-// Used by hwcomposer.drm_mediatek
-filegroup {
-    name: "drm_hwcomposer_platformmediatek",
-    srcs: ["bufferinfo/legacy/BufferInfoMaliMediatek.cpp"],
 }

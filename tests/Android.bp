@@ -1,13 +1,9 @@
 cc_library_shared {
-    name: "hwcomposer.filegroups_build_test",
-    defaults: ["hwcomposer.drm_defaults"],
+    name: "hwcomposer.filegroups_build_test_celadon",
+    defaults: ["hwcomposer.drm_defaults_celadon"],
 
     srcs: [
-        ":drm_hwcomposer_common",
-        ":drm_hwcomposer_platformhisi",
-        ":drm_hwcomposer_platformimagination",
-        ":drm_hwcomposer_platformmediatek",
-        ":drm_hwcomposer_platformmeson",
+        ":drm_hwcomposer_common_celadon",
     ],
 
     local_include_dirs: [
@@ -20,20 +16,20 @@ cc_library_shared {
 }
 
 cc_test {
-    name: "hwc-drm-tests",
+    name: "hwc-drm-tests-celadon",
 
     srcs: ["worker_test.cpp"],
 
     vendor: true,
     header_libs: ["libhardware_headers"],
-    static_libs: ["libdrmhwc_utils"],
-    shared_libs: ["hwcomposer.drm"],
-    include_dirs: ["external/drm_hwcomposer"],
+    static_libs: ["libdrmhwc_utils_celadon"],
+    shared_libs: ["hwcomposer.drm_celadon"],
+    include_dirs: ["external/drm_hwcomposer_celadon"],
 }
 
 // Tool for listening and dumping uevents
 cc_test {
-    name: "hwc-drm-uevent-print",
+    name: "hwc-drm-uevent-print-celadon",
 
     srcs: ["uevent_print.cpp"],
 
@@ -41,6 +37,6 @@ cc_test {
     header_libs: ["libhardware_headers"],
     shared_libs: ["liblog"],
     include_dirs: [
-        "external/drm_hwcomposer",
+        "external/drm_hwcomposer_celadon",
     ],
 }
