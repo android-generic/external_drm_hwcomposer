@@ -107,6 +107,15 @@ cc_library_shared {
 }
 
 cc_library_shared {
+    name: "hwcomposer.drm_gbm_cros",
+    defaults: ["hwcomposer.drm_defaults"],
+    srcs: [
+        ":drm_hwcomposer_common",
+        "bufferinfo/legacy/BufferInfoGBMCrOS.cpp",
+    ],
+}
+
+cc_library_shared {
     name: "hwcomposer.drm_minigbm",
     defaults: ["hwcomposer.drm_defaults"],
     srcs: [
