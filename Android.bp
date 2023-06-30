@@ -132,3 +132,12 @@ cc_library_shared {
         "bufferinfo/legacy/BufferInfoMinigbm.cpp",
     ],
 }
+
+cc_library_shared {
+    name: "hwcomposer.drm_gbm_cros_celadon",
+    defaults: ["hwcomposer.drm_defaults_celadon"],
+    srcs: [
+        ":drm_hwcomposer_common_celadon",
+        "bufferinfo/legacy/BufferInfoGBMCrOS.cpp",
+    ],
+}
