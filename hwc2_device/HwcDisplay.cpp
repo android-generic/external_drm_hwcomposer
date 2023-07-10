@@ -387,6 +387,10 @@ HWC2::Error HwcDisplay::GetHdrCapabilities(uint32_t *num_types,
                                            float * /*max_average_luminance*/,
                                            float * /*min_luminance*/) {
   *num_types = 0;
+  if (IsInHeadlessMode()) {
+    return HWC2::Error::Unsupported;
+  }
+
   return HWC2::Error::None;
 }
 
@@ -884,6 +888,12 @@ HWC2::Error HwcDisplay::GetRenderIntents(
     int32_t * /*android_render_intent_v1_1_t*/ outIntents) {
   if (mode != HAL_COLOR_MODE_NATIVE) {
     return HWC2::Error::BadParameter;
+  }
+
+  if (IsInHeadlessMode()) {
+    *outNumIntents = 1;
+    outIntents[0] = HAL_RENDER_INTENT_COLORIMETRIC;
+    return HWC2::Error::None;
   }
 
   if (outIntents == nullptr) {
