@@ -45,7 +45,6 @@ cc_defaults {
     cppflags: [
         "-DHWC2_INCLUDE_STRINGIFICATION",
         "-DHWC2_USE_CPP11",
-        "-std=c++17",
     ],
 
     relative_install_path: "hw",
@@ -79,6 +78,7 @@ filegroup {
         "drm/ResourceManager.cpp",
         "drm/UEventListener.cpp",
         "drm/VSyncWorker.cpp",
+        "drm/DrmHwc.cpp",
 
         "backend/Backend.cpp",
         "backend/BackendClient.cpp",
