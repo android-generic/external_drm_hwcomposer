@@ -17,6 +17,7 @@
 #define LOG_TAG "drmhwc"
 
 #include "BufferInfoMinigbm.h"
+#include "../BufferInfoCommon.h"
 
 #include <xf86drm.h>
 #include <xf86drmMode.h>
@@ -92,6 +93,9 @@ auto BufferInfoMinigbm::GetBoInfo(buffer_handle_t handle)
   bi.height = height;
 
   bi.format = info.drm_fourcc;
+  if (should_avoid_using_alpha_bits_for_framebuffer()
+      && bi.format == DRM_FORMAT_ABGR8888)
+    bi.format = DRM_FORMAT_XBGR8888;
 
   for (int i = 0; i < info.num_fds; i++) {
     bi.modifiers[i] = info.modifier;
