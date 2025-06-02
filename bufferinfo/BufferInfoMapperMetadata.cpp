@@ -19,6 +19,7 @@
 #define LOG_TAG "drmhwc"
 
 #include "BufferInfoMapperMetadata.h"
+#include "BufferInfoCommon.h"
 
 #include <drm/drm_fourcc.h>
 #include <ui/GraphicBufferMapper.h>
@@ -28,8 +29,6 @@
 #include <cinttypes>
 
 #include "utils/log.h"
-
-extern bool should_avoid_using_alpha_bits_for_framebuffer();
 
 namespace android {
 

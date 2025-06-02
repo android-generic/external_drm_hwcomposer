@@ -17,6 +17,7 @@
 #define LOG_TAG "drmhwc"
 
 #include "BufferInfoGetter.h"
+#include "BufferInfoCommon.h"
 
 #if __ANDROID_API__ >= 30
 #include "BufferInfoMapperMetadata.h"
