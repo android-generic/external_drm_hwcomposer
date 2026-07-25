@@ -20,6 +20,7 @@
 
 #include "BackendManager.h"
 #include "bufferinfo/BufferInfoGetter.h"
+#include "utils/properties.h"
 
 namespace android {
 
@@ -78,6 +79,21 @@ std::tuple<int, size_t> Backend::GetClientLayers(
     HwcDisplay *display, const std::vector<HwcLayer *> &layers) {
   int client_start = -1;
   size_t client_size = 0;
+  bool force_all_client = false;
+
+  if (Properties::ClientSmallBuffers()) {
+    for (auto *layer : layers) {
+      auto& rect = layer->GetLayerData().pi.display_frame;
+      if ((rect.right - rect.left < 512) || (rect.bottom - rect.top < 512)) {
+        force_all_client = true;
+        break;
+      }
+    }
+  }
+
+  if (force_all_client) {
+    return {0, layers.size()};
+  }
 
   for (size_t z_order = 0; z_order < layers.size(); ++z_order) {
     if (IsClientLayer(display, layers[z_order])) {

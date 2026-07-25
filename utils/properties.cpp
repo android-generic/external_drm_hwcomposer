@@ -41,3 +41,7 @@ auto Properties::ScaleWithGpu() -> bool {
 auto Properties::EnableVirtualDisplay() -> bool {
   return (property_get_bool("vendor.hwc.drm.enable_virtual_display", 0) != 0);
 }
+
+auto Properties::ClientSmallBuffers() -> bool {
+  return (property_get_bool("vendor.hwc.drm.client_small_buffers", 0) != 0);
+}
