@@ -41,3 +41,12 @@ auto Properties::ScaleWithGpu() -> bool {
 auto Properties::EnableVirtualDisplay() -> bool {
   return (property_get_bool("vendor.hwc.drm.enable_virtual_display", 0) != 0);
 }
+
+auto Properties::IgnoreHotplugDisconnect() -> bool {
+  /* When the display is driven by a single external connector (HDMI/DP),
+   * as on a TV, a hotplug disconnect would tear down the primary display and
+   * crash SurfaceFlinger. Enabled by default: keep the attached pipeline on
+   * its last frame instead of detaching it. Override with
+   * vendor.hwc.drm.ignore_hotplug_disconnect=0 */
+  return (property_get_bool("vendor.hwc.drm.ignore_hotplug_disconnect", 1) != 0);
+}

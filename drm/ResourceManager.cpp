@@ -148,6 +148,15 @@ void ResourceManager::UpdateFrontendDisplays() {
           attached_pipelines_[conn] = std::move(pipeline);
         }
       } else {
+        /* On a TV the display is driven by one external connector. A hotplug
+         * disconnect would unbind the primary display and crash
+         * SurfaceFlinger, so by default we keep the attached pipeline alive
+         * on its last frame instead of detaching it. */
+        if (Properties::IgnoreHotplugDisconnect() && conn->IsExternal()) {
+          ALOGI("%s connector disconnected, keeping pipeline attached "
+                "(ignore_hotplug_disconnect)", conn->GetName().c_str());
+          continue;
+        }
         auto &pipeline = attached_pipelines_[conn];
         frontend_interface_->UnbindDisplay(pipeline);
         attached_pipelines_.erase(conn);
